@@ -1,4 +1,5 @@
 /*
+ * Copyright 2015 Boundary Devices, Inc.
  * Copyright 2012 Freescale Semiconductor, Inc.
  * Copyright 2011 Linaro Ltd.
  *
@@ -45,8 +46,8 @@
 	ipu_id = <1>;
 };
 
-&ov5640_mipi {
-	ipu_id = <1>;
+&ov7251_mipi {
+	ipu_id = <0>;
 	csi_id = <0>;
 };
 
@@ -71,9 +72,9 @@
 	status = "okay";
 };
 
-/* ov5640_mipi */
+/* ov7251_mipi */
 &v4l2_cap_1 {
-	ipu_id = <1>;
+	ipu_id = <0>;
 	csi_id = <0>;
 	mipi_camera = <1>;
 };

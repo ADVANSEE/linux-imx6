@@ -1,4 +1,5 @@
 /*
+ * Copyright 2015 Boundary Devices, Inc.
  * Copyright 2012 Freescale Semiconductor, Inc.
  * Copyright 2011 Linaro Ltd.
  *
@@ -334,40 +335,30 @@
 		reg = <0x50>;
 	};
 
-	ov5642: ov5642@3d {
-		compatible = "ovti,ov5642";
-		reg = <0x3d>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_ipu1_2>;
-		clocks = <&clks 200>;
-		clock-names = "csi_mclk";
-		DOVDD-supply = <&reg_1p8v>;
-		AVDD-supply = <&reg_2p5v>;
-		DVDD-supply = <&reg_1p8v>;
-		pwn-gpios = <&gpio1 6 1>;
-		rst-gpios = <&gpio1 8 0>;
-		ipu_id = <0>;
-		csi_id = <0>;
-		mclk = <24000000>;
-		mclk_source = <0>;
-	};
-
-	ov5640_mipi: ov5640_mipi@3e {
-		compatible = "ovti,ov5640_mipi";
-		reg = <0x3e>;
+	ov7251_mipi: ov7251_mipi@60 {
+		compatible = "ovti,ov7251_mipi";
+		reg = <0x60>;
 		clocks = <&clks 147>;
 		clock-names = "csi_mclk";
 		DOVDD-supply = <&reg_1p8v>;
 		AVDD-supply = <&reg_2p5v>;
 		DVDD-supply = <&reg_1p8v>;
-		pwn-gpios = <&gpio6 9 1>;
-		rst-gpios = <&gpio2 5 0>;
 		ipu_id = <0>;
-		csi_id = <1>;
-		mclk = <22000000>;
-		mclk_source = <0>;
-		pwms = <&pwm3 0 45>;
+		csi_id = <0>;
+		gpio_addr = <0x20>;
 	};
+	
+	tmp102: tmp102@48 {
+		compatible = "ti,tmp102";
+		reg = <0x48>;
+	};
+	
+	tsl2561: tsl2561@29 {
+		compatible = "taos,tsl2561";
+		reg = <0x39>;
+	};
+
+	
 };
 
 &i2c3 {
@@ -425,6 +416,11 @@
 		interrupt-parent = <&gpio4>;
 		interrupts = <20 2>;
 		wakeup-gpios = <&gpio4 20 0>;
+	};
+	gpiom1: gpio@20 {
+		compatible = "mcp,mcp23008";
+		gpio-controller;
+		reg = <0x20>;
 	};
 };
 
@@ -498,7 +494,7 @@
 };
 
 &mipi_csi {
-	lanes = <2>;
+	lanes = <1>;
 	status = "okay";
 };
 
