@@ -219,7 +219,7 @@ static const struct st_sensors st_gyro_sensors[] = {
 			.mask = ST_GYRO_2_DRDY_IRQ_MASK,
 		},
 		.multi_read_bit = ST_GYRO_2_MULTIREAD_BIT,
-		.bootime = 2,
+		.bootime = 50,
 	},
 };
 
@@ -229,7 +229,7 @@ static int st_gyro_read_raw(struct iio_dev *indio_dev,
 {
 	int err;
 	struct st_sensor_data *gdata = iio_priv(indio_dev);
-
+	
 	switch (mask) {
 	case IIO_CHAN_INFO_RAW:
 		err = st_sensors_read_info_raw(indio_dev, ch, val);
@@ -302,6 +302,8 @@ int st_gyro_common_probe(struct iio_dev *indio_dev)
 	int err;
 	struct st_sensor_data *gdata = iio_priv(indio_dev);
 
+	pr_err("%s\n", __func__);
+	
 	indio_dev->modes = INDIO_DIRECT_MODE;
 	indio_dev->info = &gyro_info;
 
@@ -316,7 +318,7 @@ int st_gyro_common_probe(struct iio_dev *indio_dev)
 
 	gdata->current_fullscale = (struct st_sensor_fullscale_avl *)
 						&gdata->sensor->fs.fs_avl[0];
-	gdata->odr = gdata->sensor->odr.odr_avl[0].hz;
+	gdata->odr = gdata->sensor->odr.odr_avl[2].hz;
 
 	err = st_sensors_init_sensor(indio_dev);
 	if (err < 0)

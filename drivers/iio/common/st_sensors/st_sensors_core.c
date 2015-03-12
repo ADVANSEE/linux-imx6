@@ -15,6 +15,8 @@
 #include <linux/iio/iio.h>
 #include <asm/unaligned.h>
 
+#include <linux/time.h>
+
 #include <linux/iio/common/st_sensors.h>
 
 
@@ -296,7 +298,7 @@ int st_sensors_read_info_raw(struct iio_dev *indio_dev,
 {
 	int err;
 	struct st_sensor_data *sdata = iio_priv(indio_dev);
-
+	
 	mutex_lock(&indio_dev->mlock);
 	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
 		err = -EBUSY;
@@ -305,7 +307,6 @@ int st_sensors_read_info_raw(struct iio_dev *indio_dev,
 		err = st_sensors_set_enable(indio_dev, true);
 		if (err < 0)
 			goto read_error;
-
 		msleep((sdata->sensor->bootime * 1000) / sdata->odr);
 		err = st_sensors_read_axis_data(indio_dev, ch->address, val);
 		if (err < 0)
@@ -316,7 +317,6 @@ int st_sensors_read_info_raw(struct iio_dev *indio_dev,
 		err = st_sensors_set_enable(indio_dev, false);
 	}
 	mutex_unlock(&indio_dev->mlock);
-
 	return err;
 
 read_error:

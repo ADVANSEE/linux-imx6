@@ -23,6 +23,8 @@
 #include <linux/iio/trigger.h>
 #include <linux/iio/buffer.h>
 
+#include <linux/time.h>
+
 #include <linux/iio/common/st_sensors.h>
 #include "st_accel.h"
 
@@ -361,13 +363,13 @@ static int st_accel_read_raw(struct iio_dev *indio_dev,
 {
 	int err;
 	struct st_sensor_data *adata = iio_priv(indio_dev);
-
+	
+	
 	switch (mask) {
 	case IIO_CHAN_INFO_RAW:
 		err = st_sensors_read_info_raw(indio_dev, ch, val);
 		if (err < 0)
 			goto read_error;
-
 		return IIO_VAL_INT;
 	case IIO_CHAN_INFO_SCALE:
 		*val = 0;
@@ -376,7 +378,7 @@ static int st_accel_read_raw(struct iio_dev *indio_dev,
 	default:
 		return -EINVAL;
 	}
-
+	
 read_error:
 	return err;
 }
@@ -434,6 +436,8 @@ int st_accel_common_probe(struct iio_dev *indio_dev)
 	int err;
 	struct st_sensor_data *adata = iio_priv(indio_dev);
 
+	pr_err("%s\n", __func__);
+	
 	indio_dev->modes = INDIO_DIRECT_MODE;
 	indio_dev->info = &accel_info;
 
@@ -448,8 +452,9 @@ int st_accel_common_probe(struct iio_dev *indio_dev)
 
 	adata->current_fullscale = (struct st_sensor_fullscale_avl *)
 						&adata->sensor->fs.fs_avl[0];
-	adata->odr = adata->sensor->odr.odr_avl[0].hz;
-
+	//adata->odr = adata->sensor->odr.odr_avl[0].hz;
+	adata->odr = adata->sensor->odr.odr_avl[4].hz;
+	
 	err = st_sensors_init_sensor(indio_dev);
 	if (err < 0)
 		goto st_accel_common_probe_error;

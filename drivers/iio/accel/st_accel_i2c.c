@@ -25,6 +25,8 @@ static int st_accel_i2c_probe(struct i2c_client *client,
 	struct st_sensor_data *adata;
 	int err;
 
+	pr_err("%s\n", __func__);
+	
 	indio_dev = iio_device_alloc(sizeof(*adata));
 	if (indio_dev == NULL) {
 		err = -ENOMEM;

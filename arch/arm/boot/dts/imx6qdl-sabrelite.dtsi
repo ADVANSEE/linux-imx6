@@ -78,12 +78,6 @@
 			gpio-key,wakeup;
 		};
 
-		menu {
-			label = "Menu";
-			gpios = <&gpio2 1 0>;
-			linux,code = <KEY_MENU>;
-		};
-
 		home {
 			label = "Home";
 			gpios = <&gpio2 4 0>;
@@ -422,6 +416,18 @@
 		gpio-controller;
 		reg = <0x20>;
 	};
+	accel: accel@18 {
+		compatible = "st,lsm330dlc_accel";
+		reg = <0x18>;
+	};
+
+	gyro: gyro@6a {
+		compatible = "st,lsm330dlc_gyro";
+		reg = <0x6a>;
+	};
+	
+	
+	
 };
 
 &iomuxc {

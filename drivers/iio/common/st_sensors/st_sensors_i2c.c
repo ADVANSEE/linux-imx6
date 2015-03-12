@@ -33,7 +33,6 @@ static int st_sensors_i2c_read_byte(struct st_sensor_transfer_buffer *tb,
 	err = i2c_smbus_read_byte_data(to_i2c_client(dev), reg_addr);
 	if (err < 0)
 		goto st_accel_i2c_read_byte_error;
-
 	*res_byte = err & 0xff;
 
 st_accel_i2c_read_byte_error:
@@ -44,11 +43,14 @@ static int st_sensors_i2c_read_multiple_byte(
 		struct st_sensor_transfer_buffer *tb, struct device *dev,
 			u8 reg_addr, int len, u8 *data, bool multiread_bit)
 {
+	int err, i;
+	u8 val;
 	if (multiread_bit)
 		reg_addr |= ST_SENSORS_I2C_MULTIREAD;
 
-	return i2c_smbus_read_i2c_block_data(to_i2c_client(dev),
+	err = i2c_smbus_read_i2c_block_data(to_i2c_client(dev),
 							reg_addr, len, data);
+	return err;
 }
 
 static int st_sensors_i2c_write_byte(struct st_sensor_transfer_buffer *tb,

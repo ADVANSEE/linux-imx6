@@ -256,7 +256,7 @@ static int ov7251_write_reg_mcp23008( int reg, uint16_t val)
 {
     int ret = 0;
     struct i2c_client *client = ov7251_data.i2c_client;    
-    pr_err("%s\n",__func__);
+    //pr_err("%s\n",__func__);
     client->addr = ov7251_info_mcp23008.gpio_addr;
     ret = i2c_smbus_write_byte_data(client, reg, val);
     client->addr = ov7251_info_mcp23008.ov7251_addr;
@@ -266,14 +266,15 @@ static int ov7251_write_reg_mcp23008( int reg, uint16_t val)
 			__func__, reg, val, ret);
 	return ret;
     }
-    pr_err("%s(mipi):reg=%d,val=%d Ok\n",__func__, reg, val);
+    msleep(10);
+    //pr_err("%s(mipi):reg=%d,val=%d Ok\n",__func__, reg, val);
     return 0;
 }
 static int ov7251_read_reg_mcp23008(int reg, uint16_t *val)
 {
     int ret;
     struct i2c_client *client = ov7251_data.i2c_client;    
-    pr_err("%s\n",__func__);
+    //pr_err("%s\n",__func__);
     client->addr = ov7251_info_mcp23008.gpio_addr;
     ret = i2c_smbus_read_byte_data(client, reg);
     client->addr = ov7251_info_mcp23008.ov7251_addr;
@@ -282,7 +283,8 @@ static int ov7251_read_reg_mcp23008(int reg, uint16_t *val)
 			__func__, reg, &val, ret);
 	return ret;
     }
-    pr_err("%s(mipi):reg=%d,val=%d Ok\n",__func__, reg, &val);
+    //pr_err("%s(mipi):reg=%d,val=%d Ok\n",__func__, reg, &val);
+    msleep(10);
     *val = (uint16_t)ret;
     return 0;
 }
@@ -292,7 +294,7 @@ static int ov7251_gpio_direction_input_mcp23008(unsigned off)
 {
     uint16_t reg_val;
     int ret;
-    pr_err("%s\n",__func__);
+    //pr_err("%s\n",__func__);
     reg_val = ov7251_info_mcp23008.reg_direction | (1u << off);
     ret = ov7251_write_reg_mcp23008( MCP_IODIR, reg_val);
     if (ret)
@@ -304,7 +306,7 @@ static int ov7251_gpio_direction_output_mcp23008(unsigned off, int val)
 {
     uint16_t reg_val;
     int ret;
-    pr_err("%s\n",__func__);
+    //pr_err("%s\n",__func__);
     /* set output level */
     if (val)
 	reg_val = ov7251_info_mcp23008.reg_output | (1u << off);
@@ -358,7 +360,7 @@ static void ov7251_init_mcp23008(void)
     ov7251_gpio_direction_output_mcp23008(TEST_MODE,0);
     // reset cam -> output
     ov7251_gpio_direction_output_mcp23008(RESET_CAM,0);
-    msleep(50);
+    msleep(10);
 }
 
 static void ov7251_reset_camera(int val)
@@ -449,7 +451,7 @@ static s32 ov7251_write_reg(u16 reg, u8 val)
 			__func__, reg, val, ret);
 		return ret;
 	}
-	pr_err("%s(mipi):reg=%x,val=%x\n", __func__, reg, val);
+	//pr_err("%s(mipi):reg=%x,val=%x\n", __func__, reg, val);
 	return 0;
 }
 
@@ -479,7 +481,7 @@ static s32 ov7251_read_reg(u16 reg, u8 *val)
 		return ret;
 	}
 	*val = buf[0];
-	pr_err("%s(mipi):reg=%x,val=%x\n", __func__, reg, buf[0]);
+	//pr_err("%s(mipi):reg=%x,val=%x\n", __func__, reg, buf[0]);
 	return buf[0];
 }
 
@@ -974,7 +976,7 @@ static int ioctl_s_ctrl(struct v4l2_int_device *s, struct v4l2_control *vc)
 	switch (vc->id) {
 	case V4L2_CID_BRIGHTNESS:
 	     if( vc->value == 0 ) 
-		  brightness = 1;
+		  brightness = 0;
 	     else 
 		  brightness = 1;
 	      mcp23008_gpio_set_value(CMD_IR_LED,brightness);
